@@ -1,0 +1,26 @@
+{
+  "title": "Mini Coffret Bougies de Noël – Édition Cadeau Premium",
+  "variants": [
+    {
+      "id": "coffret-sapin-bonhomme",
+      "label": "Coffret Sapin & Bonhomme",
+      "price": 12.9,
+      "stripePriceId": "price_1SSP5LLlZEwGc68fnfQeeYAX",
+      "image": "/images/coffret-sapin-bonhomme.jpg"
+    },
+    {
+      "id": "coffret-gant-flocon",
+      "label": "Coffret Gant Rouge & Flocon",
+      "price": 12.9,
+      "stripePriceId": "price_1SSP6SLlZEwGc68f7YvtvtIR",
+      "image": "/images/coffret-gant-flocon.jpg"
+    },
+    {
+      "id": "coffret-sapin-gant-rose",
+      "label": "Coffret Sapin Rose & Gant Rose",
+      "price": 12.9,
+      "stripePriceId": "price_1SSP7aLlZEwGc68f8V7Med9G",
+      "image": "/images/coffret-sapin-gant-rose.jpg"
+    }
+  ]
+}

@@ -1,26 +1,66 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
+/* Luxe Noël Theme */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cream: #FFF8F1;
+  --primary: #8A0A0A; /* rouge profond */
+  --gold: #D4AF37; /* doré */
+  --gold-soft: #E6C766; /* variante douce */
+  --text: #1F2937; /* slate-800 */
+  --text-muted: #6B7280; /* slate-500 */
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-cream: var(--cream);
+  --color-primary: var(--primary);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Global base */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
 }
+
+/* Focus ring doré discret */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 35%, transparent);
+  border-radius: 9999px;
+}
+
+/* Premium shadows / glow */
+.shadow-gold {
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.15);
+}
+
+/* Micro-animations */
+@keyframes subtle-pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 rgba(212,175,55,0.0); opacity: 1; }
+  50% { box-shadow: 0 0 20px rgba(212,175,55,0.25); opacity: 0.98; }
+}
+.animate-pulse-gold {
+  animation: subtle-pulse-gold 12s ease-in-out infinite;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 220ms ease-out both;
+}
+
+/* Typography tweaks */
+.prose :where(h1,h2,h3,h4){
+  font-family: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+.prose a { color: var(--primary); }
+.prose hr { border-color: color-mix(in srgb, var(--gold) 35%, transparent); }

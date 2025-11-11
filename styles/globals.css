@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #B91C1C;
+  --color-secondary: #D97706;
+  --color-cream: #FFF8F1;
+}
+
+body { background-color: var(--color-cream); }

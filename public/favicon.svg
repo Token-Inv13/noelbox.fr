@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <style>
+      @font-face {
+        font-family: 'Playfair Display';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Playfair Display');
+      }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="none"/>
+  <g>
+    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+      font-family="'Playfair Display', serif" font-weight="700" font-size="132"
+      fill="#D4AF37" letter-spacing="2">
+      NB
+    </text>
+  </g>
+</svg>
