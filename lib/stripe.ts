@@ -11,7 +11,13 @@ let stripe: Stripe | null = null;
 
 export function getStripe(): Stripe {
   if (!stripe) {
-    const config: Stripe.StripeConfig = {};
+    const config: Stripe.StripeConfig = {
+      // Increase resilience on serverless
+      maxNetworkRetries: 2,
+      timeout: 30000,
+      // Use fetch-based HTTP client which can be more reliable on some platforms
+      httpClient: Stripe.createFetchHttpClient(),
+    } as Stripe.StripeConfig;
     stripe = new Stripe(key as string, config);
   }
   return stripe;

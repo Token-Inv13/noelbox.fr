@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import getStripe from '@/lib/stripe';
 import { saveOrder, type OrderRecord } from '@/lib/orders';
+import { sendOrderConfirmation } from '@/lib/email';
 import Stripe from 'stripe';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   const stripe = getStripe();
@@ -37,6 +39,20 @@ export async function POST(req: Request) {
     };
     try {
       await saveOrder(record);
+      // fire-and-forget email confirmation if SMTP is configured
+      if (record.email) {
+        try {
+          await sendOrderConfirmation(record.email, {
+            orderId: record.id,
+            amount: record.amount_total,
+            currency: record.currency,
+            variantLabel: String(record.metadata?.variantLabel || ''),
+            qty: record.metadata?.qty || null,
+          });
+        } catch (e) {
+          console.error('[webhook] email send failed', (e as any)?.message || e);
+        }
+      }
     } catch {
       return NextResponse.json({ error: 'Failed to persist order' }, { status: 500 });
     }
