@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import getStripe from '@/lib/stripe';
 import product from '@/data/product.json';
+import Stripe from 'stripe';
 
 const bodySchema = z.object({
   variantId: z.string().min(1),
@@ -23,7 +24,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Produit introuvable ou non configuré' }, { status: 400 });
     }
 
-    const line_items: Array<Parameters<typeof stripe.checkout.sessions.create>[0]['line_items'][number]> = [
+    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [
       {
         price: variant.stripePriceId,
         quantity: qty,
