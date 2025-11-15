@@ -80,7 +80,7 @@ export default function Page() {
               Prix spécial
             </div>
             <Image
-              src="/images/hero.jpg"
+              src="/images/gallery-3.jpg"
               alt="Coffret de bougies de Noël tenu en mains"
               fill
               className="object-cover"
@@ -95,7 +95,7 @@ export default function Page() {
             className="group flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none]"
             style={{ scrollBehavior: 'smooth' }}
           >
-            {['/images/gallery-1.jpg', '/images/gallery-2.jpg', '/images/gallery-3.jpg'].map(
+            {['/images/gallery-1.jpg', '/images/gallery-2.jpg', '/images/coffret-sapin-bonhomme.jpg'].map(
               (src) => (
                 <div
                   key={src}
@@ -157,7 +157,7 @@ export default function Page() {
                     checked={variantId === v.id}
                     onChange={() => setVariantId(v.id)}
                   />
-                  <div className="relative w-16 h-16 overflow-hidden rounded-lg border shadow-sm ring-1 ring-[var(--gold)]/50">
+                  <div className="relative w-24 h-24 overflow-hidden rounded-lg border shadow-sm ring-1 ring-[var(--gold)]/50">
                     <Image
                       src={v.image || '/images/variant-placeholder.jpg'}
                       alt={v.label}
