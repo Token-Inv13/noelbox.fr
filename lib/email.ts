@@ -41,6 +41,7 @@ export async function sendOrderConfirmation(to: string, params: {
   currency: string;
   variantLabel?: string | null;
   qty?: string | number | null;
+  shippingFree?: boolean;
 }) {
   const transport = getTransport();
   const cfg = getConfig();
@@ -52,6 +53,7 @@ export async function sendOrderConfirmation(to: string, params: {
     `Montant: ${amountEuros}`,
     params.variantLabel ? `Coffret: ${params.variantLabel}` : '',
     params.qty ? `Quantité: ${params.qty}` : '',
+    params.shippingFree ? `Votre commande bénéficie de la livraison offerte 🎁 (valable dès 2 coffrets achetés)` : '',
     `Référence: ${params.orderId}`,
   ].filter(Boolean).join('\n');
   await transport.sendMail({

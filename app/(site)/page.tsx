@@ -10,11 +10,20 @@ type Variant = (typeof product)["variants"][number];
 export default function Page() {
   const variants: Variant[] = product.variants as any;
   const [variantId, setVariantId] = useState<string>(variants[0]?.id || '');
-  const variant = useMemo(() => variants.find(v => v.id === variantId) || variants[0], [variants, variantId]);
+  const variant = useMemo(
+    () => variants.find((v) => v.id === variantId) || variants[0],
+    [variants, variantId],
+  );
   const [qty, setQty] = useState<number>(1);
   const [pending, startTransition] = useTransition();
   const price = variant?.price ?? 12.9;
-  const currency = useMemo(() => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }), []);
+  const currency = useMemo(
+    () => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }),
+    [],
+  );
+  const subtotal = price * qty;
+  const shipping = qty >= 2 ? 0 : 2.9;
+  const total = subtotal + shipping;
 
   async function handleCheckout() {
     startTransition(async () => {
@@ -29,14 +38,17 @@ export default function Page() {
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) {
-          const msg = typeof data?.error === 'string' ? data.error : 'Impossible de créer la session de paiement.';
+          const msg =
+            typeof data?.error === 'string'
+              ? data.error
+              : 'Impossible de créer la session de paiement.';
           alert(msg);
           return;
         }
         if (data?.url) {
           window.location.href = data.url as string;
         }
-      } catch (e) {
+      } catch {
         alert('Une erreur est survenue. Vérifiez votre connexion et réessayez.');
       }
     });
@@ -52,10 +64,15 @@ export default function Page() {
               Le coffret de bougies Noël le plus mignon de 2025.
             </h1>
             <p className="text-[color:var(--text-muted)]">
-              Bougies artisanales en cire de soja, disponibles en 3 coffrets : sapin & bonhomme, gant rouge & flocon, ou sapin rose & gant rose.
+              Bougies artisanales en cire de soja, disponibles en 3 coffrets :
+              sapin & bonhomme, gant rouge & flocon, ou sapin rose & gant rose.
             </p>
             <div className="hidden md:block">
-              <CTAButton onClick={handleCheckout} disabled={pending} label={`Commander maintenant – ${currency.format(price)}`} />
+              <CTAButton
+                onClick={handleCheckout}
+                disabled={pending}
+                label={`Commander maintenant – ${currency.format(price)}`}
+              />
             </div>
           </div>
           <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-gold border-[3px] border-[var(--gold)]">
@@ -63,7 +80,7 @@ export default function Page() {
               Prix spécial
             </div>
             <Image
-              src={"/images/hero.jpg"}
+              src="/images/hero.jpg"
               alt="Coffret de bougies de Noël tenu en mains"
               fill
               className="object-cover"
@@ -72,23 +89,28 @@ export default function Page() {
           </div>
         </section>
 
-        {/* Galerie (carousel simple en scroll-snap) */}
+        {/* Galerie */}
         <section className="space-y-3 animate-fade-in-up">
           <div
             className="group flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none]"
             style={{ scrollBehavior: 'smooth' }}
           >
-            {['/images/gallery-1.jpg', '/images/gallery-2.jpg', '/images/gallery-3.jpg'].map((src) => (
-              <div key={src} className="relative min-w-[85%] md:min-w-[32%] aspect-[4/3] snap-center overflow-hidden rounded-2xl shadow-md border border-[var(--gold)]/40">
-                <Image
-                  src={src}
-                  alt="Coffrets de bougies Noël – galerie"
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  sizes="(min-width: 768px) 33vw, 85vw"
-                />
-              </div>
-            ))}
+            {['/images/gallery-1.jpg', '/images/gallery-2.jpg', '/images/gallery-3.jpg'].map(
+              (src) => (
+                <div
+                  key={src}
+                  className="relative min-w-[85%] md:min-w-[32%] aspect-[4/3] snap-center overflow-hidden rounded-2xl shadow-md border border-[var(--gold)]/40"
+                >
+                  <Image
+                    src={src}
+                    alt="Coffrets de bougies Noël – galerie"
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(min-width: 768px) 33vw, 85vw"
+                  />
+                </div>
+              ),
+            )}
           </div>
           <div className="flex items-center justify-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[var(--gold)]" />
@@ -99,20 +121,35 @@ export default function Page() {
 
         {/* Avantages */}
         <section className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm animate-fade-in-up">
-          {['Livraison 6–10 jours', 'Cire de soja', 'Prêt à offrir', 'Édition limitée'].map((b) => (
-            <div key={b} className="bg-white rounded-2xl shadow-sm px-3 py-2 text-center border border-[var(--gold)]/20">
-              <span className="text-[var(--gold)] mr-1">★</span>{b}
-            </div>
-          ))}
+          {['Livraison 6–10 jours', 'Cire de soja', 'Prêt à offrir', 'Édition limitée'].map(
+            (b) => (
+              <div
+                key={b}
+                className="bg-white rounded-2xl shadow-sm px-3 py-2 text-center border border-[var(--gold)]/20"
+              >
+                <span className="text-[var(--gold)] mr-1">★</span>
+                {b}
+              </div>
+            ),
+          )}
         </section>
 
         {/* Variantes */}
         <section className="bg-white rounded-2xl shadow-sm p-4 md:p-6 space-y-4 border border-[var(--gold)]/20 animate-fade-in-up">
           <h2 className="text-lg font-semibold">Choisissez votre coffret</h2>
+          <p className="text-sm text-[color:var(--text-muted)] flex items-center gap-1">
+            <span role="img" aria-label="cadeau">
+              🎁
+            </span>
+            <span>Livraison offerte dès 2 coffrets achetés</span>
+          </p>
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-3">
               {variants.map((v) => (
-                <label key={v.id} className="group flex items-center gap-3 p-3 rounded-2xl border hover:bg-neutral-50 cursor-pointer bg-white shadow-sm border-[var(--gold)]/20 hover:border-[var(--gold)]/60 transition-colors">
+                <label
+                  key={v.id}
+                  className="group flex items-center gap-3 p-3 rounded-2xl border hover:bg-neutral-50 cursor-pointer bg-white shadow-sm border-[var(--gold)]/20 hover:border-[var(--gold)]/60 transition-colors"
+                >
                   <input
                     type="radio"
                     name="variant"
@@ -121,40 +158,67 @@ export default function Page() {
                     onChange={() => setVariantId(v.id)}
                   />
                   <div className="relative w-16 h-16 overflow-hidden rounded-lg border shadow-sm ring-1 ring-[var(--gold)]/50">
-                    <Image src={v.image || '/images/variant-placeholder.jpg'} alt={v.label} fill className="object-cover transition-transform duration-200 group-hover:scale-105" />
+                    <Image
+                      src={v.image || '/images/variant-placeholder.jpg'}
+                      alt={v.label}
+                      fill
+                      className="object-cover transition-transform duration-200 group-hover:scale-105"
+                    />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="inline-block h-3 w-1 bg-[var(--gold)] rounded" />
                       <div className="font-medium font-serif">{v.label}</div>
                     </div>
-                    <div className="text-xs text-neutral-600">{currency.format(v.price)}</div>
+                    <div className="text-xs text-neutral-600">
+                      {currency.format(v.price)}
+                    </div>
                   </div>
                 </label>
               ))}
             </div>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <label htmlFor="qty" className="w-28">Quantité</label>
+                <label htmlFor="qty" className="w-28">
+                  Quantité
+                </label>
                 <input
                   id="qty"
                   type="number"
                   min={1}
                   max={5}
                   value={qty}
-                  onChange={(e) => setQty(Math.max(1, Math.min(5, Number(e.target.value) || 1)))}
+                  onChange={(e) =>
+                    setQty(
+                      Math.max(1, Math.min(5, Number(e.target.value) || 1)),
+                    )
+                  }
                   className="w-20 rounded-md border px-3 py-2"
                 />
               </div>
+              <div className="space-y-1 text-sm text-neutral-700">
+                <div>Prix unitaire : {currency.format(price)}</div>
+                <div>Frais de livraison : 2,90 € (offerts dès 2 coffrets)</div>
+                <div>
+                  Total estimé :{' '}
+                  <span className="font-semibold">
+                    {currency.format(total)}
+                  </span>
+                </div>
+              </div>
               <div className="pt-2">
-                <CTAButton onClick={handleCheckout} disabled={pending} label={`Commander maintenant – ${currency.format(price)}`} />
+                <CTAButton
+                  onClick={handleCheckout}
+                  disabled={pending}
+                  label={`Commander maintenant – ${currency.format(total)}`}
+                />
               </div>
             </div>
           </div>
         </section>
 
         {/* Description */}
-        <section className="bg-white rounded-2xl shadow-sm p-6 space-y-4 border border-[var(--gold)]/15 animate-fade-in-up">
+        <section className="bg:white rounded-2xl shadow-sm p-6 space-y-4 border border-[var(--gold)]/15 animate-fade-in-up">
           <h2 className="text-lg font-semibold">Pourquoi on adore</h2>
           <div className="h-0.5 w-12 bg-[var(--gold)]/50 rounded"></div>
           <ul className="list-disc pl-6 text-sm text-neutral-700 space-y-1">
@@ -175,10 +239,26 @@ export default function Page() {
         {/* FAQ */}
         <section className="bg-white rounded-xl shadow p-4 space-y-3 border animate-fade-in-up">
           <h2 className="text-lg font-semibold">FAQ</h2>
-          <details className="p-2 border rounded-md"><summary>Délai de livraison ?</summary><div className="text-sm text-neutral-700">6–10 jours ouvrés.</div></details>
-          <details className="p-2 border rounded-md"><summary>Parfum ?</summary><div className="text-sm text-neutral-700">Parfum doux léger.</div></details>
-          <details className="p-2 border rounded-md"><summary>Prêt à offrir ?</summary><div className="text-sm text-neutral-700">Oui, coffret prêt à offrir.</div></details>
-          <details className="p-2 border rounded-md"><summary>Variantes ?</summary><div className="text-sm text-neutral-700">Choix de 4 variantes visuelles.</div></details>
+          <details className="p-2 border rounded-md">
+            <summary>Délai de livraison ?</summary>
+            <div className="text-sm text-neutral-700">6–10 jours ouvrés.</div>
+          </details>
+          <details className="p-2 border rounded-md">
+            <summary>Parfum ?</summary>
+            <div className="text-sm text-neutral-700">Parfum doux léger.</div>
+          </details>
+          <details className="p-2 border rounded-md">
+            <summary>Prêt à offrir ?</summary>
+            <div className="text-sm text-neutral-700">
+              Oui, coffret prêt à offrir.
+            </div>
+          </details>
+          <details className="p-2 border rounded-md">
+            <summary>Variantes ?</summary>
+            <div className="text-sm text-neutral-700">
+              Choix de plusieurs variantes visuelles.
+            </div>
+          </details>
         </section>
 
         {/* Avis clients */}
@@ -187,16 +267,38 @@ export default function Page() {
         </div>
 
         {/* Microcopie conversion */}
-        <p className="text-center text-sm text-[color:var(--text-muted)]">Un cadeau qui fait toujours plaisir — livraison rapide, édition limitée.</p>
+        <p className="text-center text-sm text-[color:var(--text-muted)]">
+          Un cadeau qui fait toujours plaisir — livraison rapide, édition limitée.
+        </p>
 
         {/* Footer minimal */}
         <footer className="text-sm text-gray-700 py-8 bg-[#FFF3E0] border-t border-[var(--gold)]/20">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap gap-4 items-center justify-center text-center">
-              <a href="/legal/mentions" className="underline hover:text-[var(--primary)]">Mentions légales</a>
-              <a href="/legal/cgv" className="underline hover:text-[var(--primary)]">CGV</a>
-              <a href="/legal/confidentialite" className="underline hover:text-[var(--primary)]">Confidentialité</a>
-              <a href="/livraison-retours" className="underline hover:text-[var(--primary)]">Livraison & retours</a>
+              <a
+                href="/legal/mentions"
+                className="underline hover:text-[var(--primary)]"
+              >
+                Mentions légales
+              </a>
+              <a
+                href="/legal/cgv"
+                className="underline hover:text-[var(--primary)]"
+              >
+                CGV
+              </a>
+              <a
+                href="/legal/confidentialite"
+                className="underline hover:text-[var(--primary)]"
+              >
+                Confidentialité
+              </a>
+              <a
+                href="/livraison-retours"
+                className="underline hover:text-[var(--primary)]"
+              >
+                Livraison & retours
+              </a>
             </div>
           </div>
         </footer>
@@ -209,14 +311,22 @@ export default function Page() {
           disabled={pending}
           className="w-full inline-flex items-center justify-center rounded-full bg-[var(--primary)] text-white border border-[var(--gold)]/50 font-semibold py-3 px-7 text-lg shadow-md hover:shadow-lg hover:drop-shadow-[0_0_12px_rgba(212,175,55,0.35)] animate-pulse-gold"
         >
-          Commander – {currency.format(price)}
+          Commander – {currency.format(total)}
         </button>
       </div>
     </main>
   );
 }
 
-function CTAButton({ onClick, disabled, label }: { onClick: () => void; disabled?: boolean; label: string }) {
+function CTAButton({
+  onClick,
+  disabled,
+  label,
+}: {
+  onClick: () => void;
+  disabled?: boolean;
+  label: string;
+}) {
   return (
     <button
       onClick={onClick}

@@ -10,6 +10,30 @@ export type OrderRecord = {
   metadata: Record<string, any>;
   payment_status: string;
   processed?: boolean;
+  customer_details?: {
+    email?: string | null;
+    name?: string | null;
+    phone?: string | null;
+    address?: {
+      city?: string | null;
+      country?: string | null;
+      line1?: string | null;
+      line2?: string | null;
+      postal_code?: string | null;
+      state?: string | null;
+    } | null;
+  } | null;
+  shipping_details?: {
+    name?: string | null;
+    address?: {
+      city?: string | null;
+      country?: string | null;
+      line1?: string | null;
+      line2?: string | null;
+      postal_code?: string | null;
+      state?: string | null;
+    } | null;
+  } | null;
 };
 
 function ordersBaseDir() {

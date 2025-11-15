@@ -47,6 +47,11 @@ export default async function AdminPage({ searchParams }: { searchParams: Search
               <tr>
                 <th className="text-left p-2 border">Date</th>
                 <th className="text-left p-2 border">Email</th>
+                <th className="text-left p-2 border">Nom</th>
+                <th className="text-left p-2 border">Téléphone</th>
+                <th className="text-left p-2 border">Ville</th>
+                <th className="text-left p-2 border">Code postal</th>
+                <th className="text-left p-2 border">Pays</th>
                 <th className="text-left p-2 border">Variant</th>
                 <th className="text-left p-2 border">Qté</th>
                 <th className="text-left p-2 border">Upsell</th>
@@ -58,10 +63,17 @@ export default async function AdminPage({ searchParams }: { searchParams: Search
             <tbody>
               {filtered.map(({ file, data }) => {
                 const m = data.metadata || {};
+                const cd = data.customer_details || {} as any;
+                const addr = cd.address || {} as any;
                 return (
                   <tr key={file} className="border-t">
                     <td className="p-2 border align-top">{new Date(data.date).toLocaleString('fr-FR')}</td>
                     <td className="p-2 border align-top">{data.email || ''}</td>
+                    <td className="p-2 border align-top">{cd.name || ''}</td>
+                    <td className="p-2 border align-top">{cd.phone || ''}</td>
+                    <td className="p-2 border align-top">{addr.city || ''}</td>
+                    <td className="p-2 border align-top">{addr.postal_code || ''}</td>
+                    <td className="p-2 border align-top">{addr.country || ''}</td>
                     <td className="p-2 border align-top">{m.variantLabel || ''}</td>
                     <td className="p-2 border align-top">{m.qty || ''}</td>
                     <td className="p-2 border align-top">{String(m.upsell || '')}</td>
